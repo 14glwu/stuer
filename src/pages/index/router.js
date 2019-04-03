@@ -32,6 +32,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "job" */ './views/job.vue')
     },
     {
+      path: '/editor',
+      name: 'editor',
+      component: () => import(/* webpackChunkName: "editor" */ './views/editor.vue')
+    },
+    {
       path: '/notification',
       name: 'notification',
       component: () => import(/* webpackChunkName: "notification" */ './views/notification.vue')

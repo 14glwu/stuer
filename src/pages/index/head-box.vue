@@ -20,7 +20,12 @@
           ></el-input>
         </li>
         <li class="nav-item add">
-          <el-button type="primary" size="small" icon="el-icon-edit-outline">写帖子</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            icon="el-icon-edit-outline"
+            @click="routeToEditor"
+          >写帖子</el-button>
         </li>
         <li class="nav-item notification">
           <a href="/notification" target="_blank">
@@ -78,6 +83,9 @@ export default {
     getLinkClass(href) {
       if (this.$route.path !== '/' && href === '/') return '';
       return this.$route.path.includes(href) ? 'active' : '';
+    },
+    routeToEditor() {
+      this.$router.push('editor');
     }
   }
 };

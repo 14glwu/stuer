@@ -134,7 +134,6 @@ input:-ms-input-placeholder {
     height: 80px;
     line-height: 80px;
     color: $primary-color;
-    box-sizing: border-box;
     background: #f3f4f5;
     cursor: pointer;
   }
