@@ -6,13 +6,31 @@ import store from './store';
 import { setCookie } from '@/utils';
 import { getLoginStatus } from '@/api';
 
-import { Form, FormItem, Input, Button, Message } from 'element-ui';
+import {
+  Form,
+  FormItem,
+  Input,
+  Button,
+  Select,
+  Option,
+  OptionGroup,
+  Dialog,
+  Tag,
+  Message
+} from 'element-ui';
+
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(Button);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(OptionGroup);
+Vue.use(Dialog);
+Vue.use(Tag);
 
 Vue.config.productionTip = false;
+Vue.prototype.$message = Message;
 
 router.beforeEach(async (to, from, next) => {
   if (to.query.auth_token) {

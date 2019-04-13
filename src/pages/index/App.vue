@@ -25,7 +25,6 @@ export default {
   },
   computed: {
     showHeaderFooter() {
-      console.log(this.$route);
       if (/^\/editor.*/.test(this.$route.path)) {
         //路由为发帖时隐藏头部
         return false;
@@ -64,6 +63,15 @@ summary {
 }
 html {
   font-size: 12px;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
+    Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 html,
 body,
@@ -96,7 +104,7 @@ body,
   color: #909090;
   border-bottom: 1px solid #f1f1f1;
   a {
-    color: $primary-color;
+    color: $link-color;
   }
 }
 .content {

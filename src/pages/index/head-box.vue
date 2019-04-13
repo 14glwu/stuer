@@ -12,11 +12,13 @@
         </li>
         <li class="nav-item search">
           <el-input
-            placeholder="请输入内容"
+            placeholder="搜索帖子/用户"
             prefix-icon="el-icon-search"
             v-model="search"
             size="small"
-            class="search-input"
+            @focus="searchFocus = true"
+            @blur="searchFocus = false"
+            :class="{'search-input': true, 'search-input-focus': searchFocus}"
           ></el-input>
         </li>
         <li class="nav-item add">
@@ -38,7 +40,48 @@
             <img :src="avatar" class="avatar">
           </div>
           <ul v-if="showMenu" class="nav-menu">
-            <div class="nav-menu-item"></div>
+            <div class="nav-menu-item-group">
+              <li class="nav-menu-item">
+                <a href="/editor" target="_blank">
+                  <i class="nav-menu-item-logo el-icon-edit"></i>
+                  <span>写帖子</span>
+                </a>
+              </li>
+              <li class="nav-menu-item">
+                <a href="/editor">
+                  <i class="nav-menu-item-logo el-icon-document"></i>
+                  <span>写OA</span>
+                </a>
+              </li>
+            </div>
+            <div class="nav-menu-item-group">
+              <li class="nav-menu-item">
+                <a href="/profile">
+                  <i class="nav-menu-item-logo el-icon-star-off"></i>
+                  <span>我的主页</span>
+                </a>
+              </li>
+              <li class="nav-menu-item">
+                <a href="/myLike">
+                  <i class="nav-menu-item-logo el-icon-view"></i>
+                  <span>我的点赞</span>
+                </a>
+              </li>
+            </div>
+            <div class="nav-menu-item-group">
+              <li class="nav-menu-item">
+                <a href="/setting">
+                  <i class="nav-menu-item-logo el-icon-setting"></i>
+                  <span>设置</span>
+                </a>
+              </li>
+              <li class="nav-menu-item">
+                <a href="/about">
+                  <i class="nav-menu-item-logo el-icon-info"></i>
+                  <span>关于</span>
+                </a>
+              </li>
+            </div>
           </ul>
         </li>
       </ul>
@@ -52,6 +95,7 @@ export default {
   data() {
     return {
       search: '',
+      searchFocus: false,
       routes: [
         {
           name: '首页',
@@ -76,7 +120,7 @@ export default {
       ],
       count: 6,
       avatar,
-      showMenu: false
+      showMenu: true
     };
   },
   methods: {
@@ -85,7 +129,7 @@ export default {
       return this.$route.path.includes(href) ? 'active' : '';
     },
     routeToEditor() {
-      this.$router.push('editor');
+      window.open('/editor', '_blank');
     }
   }
 };
@@ -111,6 +155,7 @@ export default {
   line-height: 5rem;
   font-size: 3.5rem;
   margin-right: 2rem;
+  color: $primary-color;
 }
 .nav-main {
   height: 100%;
@@ -164,7 +209,10 @@ export default {
   }
 }
 .search-input {
-  width: 12rem;
+  width: 8rem;
+  &-focus {
+    width: 16rem;
+  }
 }
 .notification {
   position: relative;
@@ -187,6 +235,9 @@ export default {
     word-break: normal;
   }
 }
+.menu {
+  position: relative;
+}
 .img-box {
   display: flex;
   justify-content: center;
@@ -200,6 +251,41 @@ export default {
   .avatar {
     height: 3rem;
     width: 3rem;
+  }
+}
+.nav-menu {
+  position: absolute;
+  width: 11rem;
+  top: 100%;
+  right: 0;
+  transform: translateX(0);
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(177, 180, 185, 0.45);
+  border-radius: 4px;
+  &-item-group {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 1rem 0;
+  }
+  &-item {
+    font-size: 1.3rem;
+    cursor: pointer;
+    &:hover {
+      background-color: hsla(0, 0%, 94.9%, 0.5);
+    }
+    a {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+    }
+    &-logo {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      margin-right: 0.8rem;
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
   }
 }
 </style>

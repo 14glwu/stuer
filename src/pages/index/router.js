@@ -9,37 +9,37 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: () => import(/* webpackChunkName: "home" */ './views/home.vue')
+      component: () => import(/* webpackChunkName: "home" */ './views/home/index.vue')
     },
     {
       path: '/discuss',
       name: 'discuss',
-      component: () => import(/* webpackChunkName: "discuss" */ './views/discuss.vue')
+      component: () => import(/* webpackChunkName: "discuss" */ './views/discuss/index.vue')
     },
     {
       path: '/tree-hole',
       name: 'tree-hole',
-      component: () => import(/* webpackChunkName: "tree-hole" */ './views/tree-hole.vue')
+      component: () => import(/* webpackChunkName: "tree-hole" */ './views/tree-hole/index.vue')
     },
     {
       path: '/oa',
       name: 'oa',
-      component: () => import(/* webpackChunkName: "oa" */ './views/oa.vue')
+      component: () => import(/* webpackChunkName: "oa" */ './views/oa/index.vue')
     },
     {
       path: '/job',
       name: 'job',
-      component: () => import(/* webpackChunkName: "job" */ './views/job.vue')
+      component: () => import(/* webpackChunkName: "job" */ './views/job/index.vue')
     },
     {
       path: '/editor',
       name: 'editor',
-      component: () => import(/* webpackChunkName: "editor" */ './views/editor.vue')
+      component: () => import(/* webpackChunkName: "editor" */ './views/editor/index.vue')
     },
     {
       path: '/notification',
       name: 'notification',
-      component: () => import(/* webpackChunkName: "notification" */ './views/notification.vue')
+      component: () => import(/* webpackChunkName: "notification" */ './views/notification/index.vue')
     }
   ]
 });
