@@ -1,12 +1,12 @@
 <template>
-  <div id="app" :class="{'page': true, 'page-no-header-footer': !showHeaderFooter}">
-    <header class="header" v-if="showHeaderFooter">
+  <div id="app" class="page">
+    <header class="header">
       <head-box></head-box>
     </header>
     <main class="content">
       <router-view></router-view>
     </main>
-    <footer class="footer" v-if="showHeaderFooter">
+    <footer class="footer">
       <foot-box></foot-box>
     </footer>
   </div>
@@ -22,15 +22,6 @@ export default {
   components: {
     headBox,
     footBox
-  },
-  computed: {
-    showHeaderFooter() {
-      if (/^\/editor.*/.test(this.$route.path)) {
-        //路由为发帖时隐藏头部
-        return false;
-      }
-      return true;
-    }
   }
 };
 </script>
@@ -46,6 +37,9 @@ ul,
 ol,
 li {
   list-style: none;
+}
+a {
+  text-decoration: none;
 }
 article,
 aside,
@@ -79,19 +73,17 @@ body,
   width: 100%;
   height: 100%;
 }
+html {
+  color: #333;
+  background-color: #f4f5f5;
+}
 .page {
   display: grid;
   grid-template-areas:
     'header'
     'content'
     'footer';
-  grid-template-rows: 5rem 1fr 10rem;
-  grid-template-columns: 1fr;
-}
-.page-no-header-footer {
-  display: grid;
-  grid-template-areas: 'content';
-  grid-template-rows: 1fr;
+  grid-template-rows: 5rem 1fr 7rem;
   grid-template-columns: 1fr;
 }
 .header {
@@ -110,9 +102,20 @@ body,
 .content {
   grid-area: content;
   width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.content-normal {
+  max-width: 960px;
 }
 .footer {
   grid-area: footer;
   width: 100%;
+}
+.block {
+  border-radius: 2px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background: #fff;
 }
 </style>

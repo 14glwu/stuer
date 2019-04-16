@@ -26,7 +26,6 @@ export default {
   justify-content: center;
   align-items: center;
   border-top: 1px solid #e2e2e2;
-  margin-top: 2rem;
   padding: 1rem 0;
 }
 .footer-text {

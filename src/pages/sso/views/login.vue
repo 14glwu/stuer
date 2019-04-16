@@ -96,7 +96,7 @@ export default {
             this.$message.success('登录成功');
             if (this.$route.query.redirect) {
               // 如果是从其他平台跳过来的
-              window.location.href = `${this.$route.query.redirect}?auth_token=${
+              window.location.href = `${this.$route.query.redirect}?&auth_token=${
                 data.data.auth_token
               }`;
             } else {

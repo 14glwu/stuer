@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-container">
+  <div class="editor-container block">
     <div class="editor-header">
       <div class="header_name">{{header_name}}</div>
       <div class="header-opt">
@@ -64,7 +64,7 @@
 export default {
   data() {
     return {
-      header_name: '发表帖子',
+      header_name: '写帖子',
       editor: null,
       form: {
         title: '', // 帖子标题
@@ -118,7 +118,9 @@ export default {
 .editor-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 806px;
+  background: #fff;
+  margin: 1rem auto;
 }
 .editor-header {
   display: flex;
@@ -148,6 +150,7 @@ export default {
     text-align: left;
     font: 200 1.8rem 'microsoft yahei';
     height: 5rem;
+    padding: 0 1rem;
     overflow: hidden;
     border: none;
     outline: none;

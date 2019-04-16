@@ -6,13 +6,17 @@
         <li class="main-nav-list">
           <ul class="link-list">
             <li class="link-item" v-for="(route, index) in routes" :key="index">
-              <a :href="route.href" :class="getLinkClass(route.href)">{{route.name}}</a>
+              <router-link
+                :to="route.href"
+                :class="activeIndex === index? 'active': ''"
+                @click.native="activeIndex = index"
+              >{{route.name}}</router-link>
             </li>
           </ul>
         </li>
         <li class="nav-item search">
           <el-input
-            placeholder="搜索帖子/用户"
+            :placeholder="searchFocus ? '搜索帖子/用户': '搜索'"
             prefix-icon="el-icon-search"
             v-model="search"
             size="small"
@@ -29,13 +33,13 @@
             @click="routeToEditor"
           >写帖子</el-button>
         </li>
-        <li class="nav-item notification">
+        <li class="nav-item notification" v-if="$store.getters.isLogin">
           <a href="/notification" target="_blank">
             <i class="el-icon-message"></i>
             <span class="count">{{count}}</span>
           </a>
         </li>
-        <li class="nav-item menu">
+        <li class="nav-item menu" v-if="$store.getters.isLogin">
           <div class="img-box" @click="showMenu=!showMenu">
             <img :src="avatar" class="avatar">
           </div>
@@ -56,13 +60,13 @@
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
-                <a href="/profile">
+                <a :href="`/profile/${$store.getters.user.id}`">
                   <i class="nav-menu-item-logo el-icon-star-off"></i>
                   <span>我的主页</span>
                 </a>
               </li>
               <li class="nav-menu-item">
-                <a href="/myLike">
+                <a :href="`/profile/${$store.getters.user.id}/likes`">
                   <i class="nav-menu-item-logo el-icon-view"></i>
                   <span>我的点赞</span>
                 </a>
@@ -70,19 +74,18 @@
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
-                <a href="/setting">
+                <a :href="`/profile/${$store.getters.user.id}/setting`">
                   <i class="nav-menu-item-logo el-icon-setting"></i>
-                  <span>设置</span>
-                </a>
-              </li>
-              <li class="nav-menu-item">
-                <a href="/about">
-                  <i class="nav-menu-item-logo el-icon-info"></i>
-                  <span>关于</span>
+                  <span>个人设置</span>
                 </a>
               </li>
             </div>
           </ul>
+        </li>
+        <li class="nav-item sso" v-else>
+          <a :href="SsoHref()" class="loginSignup">
+            <span>登陆/注册</span>
+          </a>
         </li>
       </ul>
     </nav>
@@ -110,26 +113,26 @@ export default {
           href: '/tree-hole'
         },
         {
-          name: 'OA',
-          href: '/oa'
-        },
-        {
           name: '求职区',
           href: '/job'
+        },
+        {
+          name: 'OA',
+          href: '/oa'
         }
       ],
+      activeIndex: 0,
       count: 6,
       avatar,
-      showMenu: true
+      showMenu: false
     };
   },
   methods: {
-    getLinkClass(href) {
-      if (this.$route.path !== '/' && href === '/') return '';
-      return this.$route.path.includes(href) ? 'active' : '';
+    SsoHref() {
+      return `/sso?redirect=${window.location.href}`;
     },
     routeToEditor() {
-      window.open('/editor', '_blank');
+      this.$router.push('/editor');
     }
   }
 };
@@ -178,6 +181,17 @@ export default {
     flex: 1 1 auto;
     justify-content: flex-end;
     cursor: auto;
+  }
+}
+.sso {
+  .loginSignup {
+    height: 2.67rem;
+    line-height: 2.67rem;
+    border-radius: 3px;
+    padding: 0 0.5rem;
+    font-size: 1.2rem;
+    color: $primary-color;
+    border: 1px solid $primary-color;
   }
 }
 
