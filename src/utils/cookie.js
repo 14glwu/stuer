@@ -3,12 +3,12 @@ export function getCookie(name) {
   return v ? v[2] : null;
 }
 
-export function setCookie(name, value, days) {
+export function setCookie(name, value, days = 1, domain = 'ericwu.cn') {
   const d = new Date();
   d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
-  document.cookie = `${name}=${value};path=/;expires=${d.toGMTString()}`;
+  document.cookie = `${name}=${value};path=/;domain=${domain};expires=${d.toGMTString()}`;
 }
 
-export function deleteCookie(name) {
-  setCookie(name, '', -1);
+export function deleteCookie(name, domain) {
+  setCookie(name, '', -1, domain);
 }

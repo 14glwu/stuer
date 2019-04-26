@@ -2,8 +2,19 @@
   <div class="profile_container">
     <div class="profile-info block" v-if="userExist">
       <div class="profile-info-main">
-        <div class="img-box">
-          <img :src="avatar" class="avatar">
+        <el-upload
+          v-if="amI"
+          :class="avatar ? 'avatar-box' : 'avatar-uploader' "
+          action="/api/uploadImg"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="avatar" :src="avatar" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="avatar-box" v-else>
+          <img :src="defaultAvatar" class="avatar">
         </div>
         <div class="info-box">
           <div class="nickName-box">
@@ -11,7 +22,10 @@
             <div class="role">{{roleName}}</div>
           </div>
           <div class="personSign-box">
-            <span class="personSign">{{personSign}}</span>
+            <span
+              :class="{personSign:true, lineMultiple: personSign.length > 65}"
+              :title="personSign"
+            >{{personSign}}</span>
           </div>
         </div>
       </div>
@@ -51,13 +65,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import avatar from '@/assets/logo.png';
-import { getUserInfoById } from '@/api';
+import defaultAvatar from '@/assets/default-avatar.png';
+import { getUserInfoById, updateUserInfo } from '@/api';
 export default {
   data() {
     return {
       activeIndex: 0,
-      avatar,
+      defaultAvatar,
       navs: [
         {
           href: '',
@@ -72,12 +86,17 @@ export default {
         {
           href: '/likes',
           icon: '#icon-zan',
-          name: '我的点赞'
+          name: '点赞'
         },
         {
           href: '/basicInfo',
           icon: '#icon-user',
           name: '基本信息'
+        },
+        {
+          href: '/moreInfo',
+          icon: '#icon-more-info',
+          name: '更多信息'
         },
         {
           href: '/setting',
@@ -89,17 +108,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'pageUser',
-      'user'
-      // ...
-    ]),
-    amI() {
-      //是否是本人的个人信息界面
-      if (this.user && this.pageUser && this.user.id === this.pageUser.id) {
-        return true;
+    ...mapGetters(['pageUser', 'amI']),
+    avatar() {
+      if (this.pageUser && this.pageUser.avatar) {
+        return this.pageUser.avatar;
       }
-      return false;
+      return '';
     },
     nickName() {
       if (this.pageUser && this.pageUser.nickName) {
@@ -134,6 +148,10 @@ export default {
   },
   async created() {
     await this.getPageUserInfo();
+    // 不是学生的用户不需要展示更多信息,不是本人也无法看到更多信息
+    if ((this.pageUser && this.pageUser.role > 2) || !this.amI) {
+      this.navs.splice(4, 1);
+    }
   },
   methods: {
     async getPageUserInfo() {
@@ -145,6 +163,25 @@ export default {
         this.userExist = false;
       }
     },
+    async handleAvatarSuccess(res, file) {
+      if (res.code === 0) {
+        this.avatar = res.data.fileUrl;
+        const result = await updateUserInfo({
+          avatar: res.data.fileUrl
+        });
+        if (result.code === 0) {
+          this.$store.commit('setPageUser', result.data);
+          this.$store.commit('setUser', result.data);
+        }
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isLt2M;
+    },
     routeToUserEdit() {
       this.$router.push(`/profile/${this.$route.params.id}/basicInfo#edit`);
     },
@@ -155,7 +192,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '~@/style/variables.scss';
 .profile_container {
   padding: 2rem 0;
@@ -173,20 +210,41 @@ export default {
     align-items: center;
   }
 }
-.img-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 7rem;
-  width: 7rem;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #eee;
-  cursor: pointer;
-  .avatar {
-    height: 7rem;
-    width: 7rem;
+.avatar-uploader {
+  .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    &:hover {
+      border-color: #409eff;
+    }
   }
+  &-icon {
+    font-size: 2rem;
+    color: #8c939d;
+    width: 7rem;
+    height: 7rem;
+    line-height: 7rem;
+    text-align: center;
+  }
+}
+.avatar-box {
+  border: none;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  background: #eee;
+  overflow: hidden;
+  .el-upload {
+    border: none;
+  }
+}
+.avatar {
+  width: 7rem;
+  height: 7rem;
+  display: block;
 }
 .info-box {
   display: flex;
@@ -195,7 +253,7 @@ export default {
 }
 .nickName-box {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   .nickName {
     margin-right: 1rem;
@@ -211,13 +269,26 @@ export default {
   }
 }
 .personSign-box {
+  max-width: 50rem;
   margin-top: 1.2rem;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   .personSign {
+    position: relative;
     font-size: 1.25rem;
     line-height: 1.5;
     color: #4a68ad;
-    cursor: pointer;
   }
+}
+// 多行显示
+.lineMultiple {
+  height: 4rem; // 避免不兼容
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /*规定最多显示两行*/
 }
 .edit-profile-btn {
   width: 10rem;
@@ -231,6 +302,7 @@ export default {
   border: 1px solid $primary-color;
   background-color: #fff;
   border-radius: 4px;
+  outline: none;
   cursor: pointer;
 }
 .profile-main {

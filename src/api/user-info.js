@@ -10,3 +10,8 @@ export async function getUserInfoById(id) {
   const rsp = await http.get(`/user/${id}`);
   return rsp.data;
 }
+
+export async function updateUserInfo(params) {
+  const rsp = await http.post('/updateUserInfo', params);
+  return rsp.data;
+}

@@ -93,7 +93,8 @@
 </template>
 
 <script>
-import avatar from '@/assets/logo.png';
+import { mapGetters } from 'vuex';
+import defaultAvatar from '@/assets/default-avatar.png';
 export default {
   data() {
     return {
@@ -123,9 +124,17 @@ export default {
       ],
       activeIndex: 0,
       count: 6,
-      avatar,
       showMenu: false
     };
+  },
+  computed: {
+    ...mapGetters(['user']),
+    avatar() {
+      if (this.user && this.user.avatar) {
+        return this.user.avatar;
+      }
+      return defaultAvatar;
+    }
   },
   methods: {
     SsoHref() {

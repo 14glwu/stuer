@@ -65,7 +65,6 @@ export default new Router({
     },
     {
       path: '/profile/:id',
-      name: 'profile',
       component: () => import(/* webpackChunkName: "profile" */ './views/profile/index.vue'),
       meta: {
         needLogin: false
@@ -103,6 +102,15 @@ export default new Router({
           name: 'profile-basicInfo',
           component: () =>
             import(/* webpackChunkName: "profile-basicInfo" */ './views/profile/basic-info.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
+          path: 'moreInfo',
+          name: 'profile-moreInfo',
+          component: () =>
+            import(/* webpackChunkName: "profile-moreInfo" */ './views/profile/more-info.vue'),
           meta: {
             needLogin: true
           }
