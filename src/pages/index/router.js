@@ -7,6 +7,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      // 首页
       path: '/',
       name: 'home',
       component: () => import(/* webpackChunkName: "home" */ './views/home/index.vue'),
@@ -15,6 +16,7 @@ export default new Router({
       }
     },
     {
+      // 讨论区
       path: '/discuss',
       name: 'discuss',
       component: () => import(/* webpackChunkName: "discuss" */ './views/discuss/index.vue'),
@@ -23,6 +25,7 @@ export default new Router({
       }
     },
     {
+      // 树洞
       path: '/tree-hole',
       name: 'tree-hole',
       component: () => import(/* webpackChunkName: "tree-hole" */ './views/tree-hole/index.vue'),
@@ -31,19 +34,21 @@ export default new Router({
       }
     },
     {
+      // 学校通知
       path: '/oa',
       name: 'oa',
       component: () => import(/* webpackChunkName: "oa" */ './views/oa/index.vue'),
       meta: {
-        needLogin: false
+        needLogin: true
       }
     },
     {
+      // 求职区
       path: '/job',
       name: 'job',
       component: () => import(/* webpackChunkName: "job" */ './views/job/index.vue'),
       meta: {
-        needLogin: false
+        needLogin: true
       }
     },
     {
