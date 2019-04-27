@@ -160,8 +160,8 @@ export default {
         this.isEdit = true;
       }
     },
-    pageUser() {
-      this.form = Object.assign({}, this.pageUser);
+    pageUser(pageUser) {
+      this.form = Object.assign({}, pageUser);
     }
   },
   methods: {
