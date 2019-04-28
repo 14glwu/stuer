@@ -164,6 +164,12 @@ export default {
       this.form = Object.assign({}, pageUser);
     }
   },
+  created() {
+    if (this.$route.hash === '#edit') {
+      this.isEdit = true;
+    }
+    this.form = Object.assign({}, this.pageUser);
+  },
   methods: {
     getRoleName(role) {
       const map = {

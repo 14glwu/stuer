@@ -108,10 +108,10 @@ export default {
       rules: {
         name: [{ max: 10, message: '名字长度需小于10个字符', trigger: 'blur' }]
       },
-      majorOpts: [],
+      majorOpts: [], // 专业列表
       marjorMap: {},
       idCardTypeList: ['身份证', '护照', '港澳通行证', '台胞证', '军官证', '其他'],
-      companyOpts: []
+      companyOpts: [] // 公司列表
     };
   },
   computed: {
@@ -130,6 +130,12 @@ export default {
     }
   },
   watch: {
+    async isEdit() {
+      if (!this.majorOpts.length || !this.companyOpts.length) {
+        // 避免重复请求
+        await Promise.all([this.getMajors(), this.getCompanies()]);
+      }
+    },
     $route(to, from) {
       if (to.hash === '#edit') {
         this.isEdit = true;
@@ -140,7 +146,10 @@ export default {
     }
   },
   async created() {
-    await Promise.all([this.getMajors(), this.getCompanies()]);
+    if (this.$route.hash === '#edit') {
+      this.isEdit = true;
+    }
+    this.form = Object.assign({}, this.pageUser);
   },
   methods: {
     async getMajors() {

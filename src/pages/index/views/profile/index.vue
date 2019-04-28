@@ -37,18 +37,20 @@
       <div class="profile-main-nav block">
         <ul class="profile-nav">
           <li
-            :class="{'profile-nav-item':true, 'active': activeIndex === index}"
+            :class="{'profile-nav-item':true, 'active': isActive(nav.href) }"
             v-for="(nav, index) in navs"
             :key="index"
-            @click="activeIndex = index"
           >
-            <a :href="`/profile/${$route.params.id}${nav.href}`">
+            <router-link
+              :to="`/profile/${$route.params.id}${nav.href}`"
+              @click.native="activeIndex = index"
+            >
               <svg class="profile-nav-item-logo" aria-hidden="true">
                 <use :xlink:href="nav.icon"></use>
               </svg>
               <span>{{nav.name}}</span>
               <i class="el-icon-arrow-right icon-right"></i>
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -217,6 +219,19 @@ export default {
     },
     routeToIndex() {
       this.$router.push('/');
+    },
+    isActive(href) {
+      // 导航是否高亮
+      if (
+        this.$route.matched[1].path.slice(this.$route.matched[1].path.lastIndexOf('/')) === '/' &&
+        href === ''
+      ) {
+        return true;
+      }
+
+      return (
+        this.$route.matched[1].path.slice(this.$route.matched[1].path.lastIndexOf('/')) === href
+      );
     }
   }
 };
@@ -354,6 +369,12 @@ export default {
     font-size: 1.3rem;
     color: #71777c;
     cursor: pointer;
+    &.active {
+      background-color: hsla(0, 0%, 94.9%, 0.5);
+      a {
+        color: $primary-color;
+      }
+    }
     &:hover {
       background-color: hsla(0, 0%, 94.9%, 0.5);
     }
