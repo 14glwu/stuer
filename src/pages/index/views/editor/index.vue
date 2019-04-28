@@ -166,7 +166,7 @@ export default {
     border: 1px solid #ddd;
   }
   .editor-main {
-    z-index: 1100 !important;
+    z-index: 800 !important;
     height: calc(100% - 48px);
     border: 1px solid #ddd;
   }

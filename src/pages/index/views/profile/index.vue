@@ -41,10 +41,7 @@
             v-for="(nav, index) in navs"
             :key="index"
           >
-            <router-link
-              :to="`/profile/${$route.params.id}${nav.href}`"
-              @click.native="activeIndex = index"
-            >
+            <router-link :to="`/profile/${$route.params.id}${nav.href}`">
               <svg class="profile-nav-item-logo" aria-hidden="true">
                 <use :xlink:href="nav.icon"></use>
               </svg>
@@ -72,7 +69,6 @@ import { getUserInfoById, updateUserInfo } from '@/api';
 export default {
   data() {
     return {
-      activeIndex: 0,
       defaultAvatar,
       navs: [
         {
@@ -364,6 +360,7 @@ export default {
   }
 }
 .profile-nav {
+  padding: 2rem 0;
   &-item {
     position: relative;
     font-size: 1.3rem;

@@ -91,7 +91,7 @@ html {
   grid-area: header;
   width: 100%;
   height: 5rem;
-  z-index: 250;
+  z-index: 1000;
   background: #fff;
   color: #909090;
   border-bottom: 1px solid #f1f1f1;

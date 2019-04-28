@@ -34,58 +34,58 @@
           >写帖子</el-button>
         </li>
         <li class="nav-item notification" v-if="$store.getters.isLogin">
-          <a href="/notification" target="_blank">
+          <router-link to="/notification" target="_blank">
             <i class="el-icon-message"></i>
             <span class="count">{{count}}</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item menu" v-if="$store.getters.isLogin">
           <div class="img-box" @click="showMenu=!showMenu">
             <img :src="avatar" class="avatar">
           </div>
-          <ul v-if="showMenu" class="nav-menu">
+          <ul v-if="showMenu" class="nav-menu" @click="showMenu=!showMenu">
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
-                <a href="/editor" target="_blank">
+                <router-link to="/editor">
                   <i class="nav-menu-item-logo el-icon-edit"></i>
                   <span>写帖子</span>
-                </a>
+                </router-link>
               </li>
               <li class="nav-menu-item">
-                <a href="/editor">
+                <router-link to="/editor">
                   <i class="nav-menu-item-logo el-icon-document"></i>
                   <span>写OA</span>
-                </a>
+                </router-link>
               </li>
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
-                <a :href="`/profile/${$store.getters.user.id}`">
+                <router-link :to="`/profile/${$store.getters.user.id}`">
                   <i class="nav-menu-item-logo el-icon-star-off"></i>
                   <span>我的主页</span>
-                </a>
+                </router-link>
               </li>
               <li class="nav-menu-item">
-                <a :href="`/profile/${$store.getters.user.id}/likes`">
+                <router-link :to="`/profile/${$store.getters.user.id}/likes`">
                   <i class="nav-menu-item-logo el-icon-view"></i>
                   <span>我的点赞</span>
-                </a>
+                </router-link>
               </li>
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
-                <a :href="`/profile/${$store.getters.user.id}/setting`">
+                <router-link :to="`/profile/${$store.getters.user.id}/setting`">
                   <i class="nav-menu-item-logo el-icon-setting"></i>
                   <span>个人设置</span>
-                </a>
+                </router-link>
               </li>
             </div>
           </ul>
         </li>
         <li class="nav-item sso" v-else>
-          <a :href="SsoHref()" class="loginSignup">
+          <router-link :to="SsoHref()" class="loginSignup">
             <span>登陆/注册</span>
-          </a>
+          </router-link>
         </li>
       </ul>
     </nav>
@@ -122,7 +122,7 @@ export default {
           href: '/oa'
         }
       ],
-      activeIndex: 0,
+      activeIndex: -1,
       count: 6,
       showMenu: false
     };
@@ -134,6 +134,28 @@ export default {
         return this.user.avatar;
       }
       return defaultAvatar;
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // 导航栏高亮设置
+      if (to.path === '/') {
+        // 首页
+        this.activeIndex = 0;
+        return;
+      }
+      for (let index in this.routes) {
+        // 导航栏其他页
+        if (
+          this.routes[index].href.includes(to.path) &&
+          this.routes[index].href !== '/' &&
+          to.path !== '/'
+        ) {
+          this.activeIndex = parseInt(index, 10);
+          return;
+        }
+      }
+      this.activeIndex = -1; // 非导航栏的其他页面，导航栏不高亮
     }
   },
   methods: {
