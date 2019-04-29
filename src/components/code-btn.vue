@@ -13,6 +13,7 @@ export default {
   },
   methods: {
     sendCodeClick() {
+      const time = this.time; // this.time值在定时器内部访问不了
       const self = this;
       self.isDisabled = true;
       const interval = setInterval(function() {
@@ -20,7 +21,7 @@ export default {
         --self.time;
         if (self.time < 0) {
           self.btnName = '获取验证码';
-          self.time = 10;
+          self.time = time;
           self.isDisabled = false;
           clearInterval(interval);
         }

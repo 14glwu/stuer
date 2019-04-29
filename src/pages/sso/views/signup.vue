@@ -124,6 +124,10 @@ export default {
       this.$router.push({ name: 'login', query: { redirect: this.$route.query.redirect } });
     },
     async sendCode() {
+      if (!this.form.email) {
+        this.$message.error('请先输入邮箱后再发送验证码');
+        return;
+      }
       const data = await sendCode({ email: this.form.email });
       if (data.code === 0) {
         this.$message.success('验证码已发送，请前往邮箱查看');
