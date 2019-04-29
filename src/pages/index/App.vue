@@ -117,5 +117,17 @@ html {
   border-radius: 2px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   background: #fff;
+  &-title {
+    &:before {
+      background: #ff6547;
+      content: '';
+      display: inline-block;
+      width: 0.7rem;
+      height: 0.7rem;
+      margin-right: 0.6rem;
+      margin-bottom: 0.2rem;
+      vertical-align: middle;
+    }
+  }
 }
 </style>

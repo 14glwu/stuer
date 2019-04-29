@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "dayjs": "^1.8.13",
     "element-ui": "^2.6.3",
     "vue": "^2.6.10",
     "vue-router": "^3.0.1",

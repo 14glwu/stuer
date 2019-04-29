@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import dayjs from 'dayjs';
 
 import { setCookie } from '@/utils';
 import { getLoginStatus, getUserInfo } from '@/api';
@@ -39,6 +40,7 @@ Vue.use(Upload);
 
 Vue.config.productionTip = false;
 Vue.prototype.$message = Message;
+Vue.prototype.$dayjs = dayjs;
 
 router.beforeEach(async (to, from, next) => {
   if (to.query.auth_token) {
