@@ -83,9 +83,9 @@
           </ul>
         </li>
         <li class="nav-item sso" v-else>
-          <router-link :to="SsoHref()" class="loginSignup">
+          <a :href="SsoHref()" class="loginSignup">
             <span>登陆/注册</span>
-          </router-link>
+          </a>
         </li>
       </ul>
     </nav>
