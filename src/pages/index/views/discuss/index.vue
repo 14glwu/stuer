@@ -29,7 +29,7 @@
                   <div class="foot-tips">
                     <router-link
                       class="post-user"
-                      :to="`/profile/${user.id}`"
+                      :to="`/profile/${post.userId}`"
                     >{{post.userInfo.nickName || 'stuer用户'}}</router-link>&nbsp;
                     <span
                       class="post-time"

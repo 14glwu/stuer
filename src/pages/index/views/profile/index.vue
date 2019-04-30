@@ -14,7 +14,8 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="avatar-box" v-else>
-          <img :src="defaultAvatar" class="avatar">
+          <img v-if="avatar" :src="avatar" class="avatar">
+          <img v-else :src="defaultAvatar" class="avatar">
         </div>
         <div class="info-box">
           <div class="nickName-box">
@@ -67,6 +68,7 @@ import { mapGetters } from 'vuex';
 import defaultAvatar from '@/assets/default-avatar.png';
 import { getUserInfoById, updateUserInfo } from '@/api';
 export default {
+  inject: ['reload'],
   data() {
     return {
       defaultAvatar,
@@ -106,7 +108,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['pageUser', 'amI']),
+    ...mapGetters(['pageUser', 'user', 'amI']),
     avatar() {
       if (this.pageUser && this.pageUser.avatar) {
         return this.pageUser.avatar;
@@ -145,6 +147,11 @@ export default {
     }
   },
   watch: {
+    async $route(to, from) {
+      if (to.params && from.params && to.params.id !== from.params.id) {
+        this.reload();
+      }
+    },
     pageUser(pageUser) {
       let navs = this.navs.slice();
       // 用户角色为学生用户后，可以看到 更多信息和设置
@@ -180,6 +187,7 @@ export default {
   },
   async created() {
     await this.getPageUserInfo();
+    this.setAmI();
   },
   methods: {
     async getPageUserInfo() {
@@ -189,6 +197,13 @@ export default {
         this.$store.commit('setPageUser', result.data);
       } else if (result.code === 2003) {
         this.userExist = false;
+      }
+    },
+    setAmI() {
+      if (this.user && this.pageUser && this.user.id === this.pageUser.id) {
+        this.$store.commit('setAmI', true);
+      } else {
+        this.$store.commit('setAmI', false);
       }
     },
     async handleAvatarSuccess(res, file) {

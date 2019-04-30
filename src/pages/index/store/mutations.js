@@ -7,5 +7,8 @@ export default {
   },
   setPageUser(state, payload) {
     state.pageUser = payload;
+  },
+  setAmI(state, payload) {
+    state.amI = payload;
   }
 };

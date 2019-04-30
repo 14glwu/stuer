@@ -4,7 +4,7 @@
       <head-box></head-box>
     </header>
     <main class="content">
-      <router-view></router-view>
+      <router-view v-if="isRouterAlive"></router-view>
     </main>
     <footer class="footer">
       <foot-box></foot-box>
@@ -16,12 +16,25 @@
 import headBox from './head-box';
 import footBox from './foot-box';
 export default {
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
   data() {
-    return {};
+    return {
+      isRouterAlive: true
+    };
   },
   components: {
     headBox,
     footBox
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(() => (this.isRouterAlive = true));
+    }
   }
 };
 </script>
