@@ -31,7 +31,7 @@
               :class="{'sex-box':true, 'male':true,'selected':form.gender === 1}"
               @click="setGender(1)"
             >
-              <svg class="sex-icon" aria-hidden="true">
+              <svg class="icon sex-icon" aria-hidden="true">
                 <use xlink:href="#icon-male"></use>
               </svg>
               <span>男生</span>
@@ -41,7 +41,7 @@
               :class="{'sex-box':true, 'female':true,'selected':form.gender === 0}"
               @click="setGender(0)"
             >
-              <svg class="sex-icon" aria-hidden="true">
+              <svg class="icon sex-icon" aria-hidden="true">
                 <use xlink:href="#icon-female"></use>
               </svg>
               <span>女生</span>
@@ -89,10 +89,10 @@
           </el-form-item>
           <el-form-item :label="`${meOrHim}的性别：`">
             <div class="sex-icon-box">
-              <svg class="sex-icon" aria-hidden="true" v-if="form.gender === 1">
+              <svg class="icon sex-icon" aria-hidden="true" v-if="form.gender === 1">
                 <use xlink:href="#icon-male2"></use>
               </svg>
-              <svg class="sex-icon" aria-hidden="true" v-if="form.gender === 0">
+              <svg class="icon sex-icon" aria-hidden="true" v-if="form.gender === 0">
                 <use xlink:href="#icon-female2"></use>
               </svg>
             </div>
@@ -273,12 +273,7 @@ export default {
     }
   }
   .sex-icon {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
     margin-right: 1rem;
-    font-size: 1em;
-    vertical-align: middle;
   }
 }
 .sex-icon-box {
@@ -289,7 +284,6 @@ export default {
     height: 1.5em;
     margin-left: 1.2rem;
     font-size: 1.5em;
-    vertical-align: middle;
   }
 }
 </style>

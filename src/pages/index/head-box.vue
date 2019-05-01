@@ -47,37 +47,55 @@
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
                 <router-link to="/editor">
-                  <i class="nav-menu-item-logo el-icon-edit"></i>
+                  <svg class="icon nav-menu-item-logo" aria-hidden="true">
+                    <use xlink:href="#icon-edit"></use>
+                  </svg>
                   <span>写帖子</span>
-                </router-link>
-              </li>
-              <li class="nav-menu-item">
-                <router-link to="/editor">
-                  <i class="nav-menu-item-logo el-icon-document"></i>
-                  <span>写OA</span>
                 </router-link>
               </li>
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
                 <router-link :to="`/profile/${$store.getters.user.id}`">
-                  <i class="nav-menu-item-logo el-icon-star-off"></i>
+                  <svg class="icon nav-menu-item-logo" aria-hidden="true">
+                    <use xlink:href="#icon-me"></use>
+                  </svg>
                   <span>我的主页</span>
                 </router-link>
               </li>
               <li class="nav-menu-item">
                 <router-link :to="`/profile/${$store.getters.user.id}/likes`">
-                  <i class="nav-menu-item-logo el-icon-view"></i>
+                  <svg class="icon nav-menu-item-logo" aria-hidden="true">
+                    <use xlink:href="#icon-like"></use>
+                  </svg>
                   <span>我的点赞</span>
+                </router-link>
+              </li>
+              <li class="nav-menu-item">
+                <router-link :to="`/profile/${$store.getters.user.id}/setting`">
+                  <svg class="icon nav-menu-item-logo" aria-hidden="true">
+                    <use xlink:href="#icon-setting1"></use>
+                  </svg>
+                  <span>个人设置</span>
                 </router-link>
               </li>
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
                 <router-link :to="`/profile/${$store.getters.user.id}/setting`">
-                  <i class="nav-menu-item-logo el-icon-setting"></i>
-                  <span>个人设置</span>
+                  <svg class="icon nav-menu-item-logo" aria-hidden="true">
+                    <use xlink:href="#icon-about"></use>
+                  </svg>
+                  <span>关于我们</span>
                 </router-link>
+              </li>
+              <li class="nav-menu-item">
+                <a @click="logout">
+                  <svg class="icon nav-menu-item-logo" aria-hidden="true">
+                    <use xlink:href="#icon-logout"></use>
+                  </svg>
+                  <span>登出</span>
+                </a>
               </li>
             </div>
           </ul>
@@ -94,6 +112,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { deleteCookie } from '@/utils';
+import { logout } from '@/api';
 import defaultAvatar from '@/assets/default-avatar.png';
 export default {
   data() {
@@ -161,6 +181,16 @@ export default {
   methods: {
     SsoHref() {
       return `/sso?redirect=${window.location.href}`;
+    },
+    async logout() {
+      const result = await logout();
+      if (result.code === 0) {
+        localStorage.removeItem('isLogin');
+        deleteCookie('auth_token', process.env.VUE_APP_DOMAIN);
+        window.location.href = '/';
+      } else {
+        this.$message.error('退出登录失败');
+      }
     },
     routeToEditor() {
       this.$router.push('/editor');
@@ -324,12 +354,7 @@ export default {
       padding: 0.5rem 1rem;
     }
     &-logo {
-      display: inline-block;
-      width: 1em;
-      height: 1em;
       margin-right: 0.8rem;
-      font-size: 1.2em;
-      vertical-align: middle;
     }
   }
 }

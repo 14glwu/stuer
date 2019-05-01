@@ -6,6 +6,12 @@ export async function login(params) {
   return rsp.data;
 }
 
+// 登录
+export async function logout() {
+  const rsp = await http.get('/logout');
+  return rsp.data;
+}
+
 // 注册
 export async function signup(params) {
   const rsp = await http.post('/signup', params);

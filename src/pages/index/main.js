@@ -4,7 +4,7 @@ import router from './router';
 import store from './store';
 import dayjs from 'dayjs';
 
-import { setCookie } from '@/utils';
+import { setCookie, deleteCookie } from '@/utils';
 import { getLoginStatus, getUserInfo } from '@/api';
 
 import {
@@ -75,8 +75,7 @@ router.beforeEach(async (to, from, next) => {
         // 登录token已经过期，一般情况下是需要获取新的token
         // 不过我的做法是清除用户的登录状态，回到未登录状态
         localStorage.removeItem('isLogin');
-        store.commit('setUser', null);
-        store.commit('loginStatus', false);
+        deleteCookie('auth_token', process.env.VUE_APP_DOMAIN);
         window.location.href = '/';
       }
     }

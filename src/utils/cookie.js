@@ -9,6 +9,6 @@ export function setCookie(name, value, days = 1, domain = 'ericwu.cn') {
   document.cookie = `${name}=${value};path=/;domain=${domain};expires=${d.toGMTString()}`;
 }
 
-export function deleteCookie(name, domain) {
+export function deleteCookie(name, domain = 'ericwu.cn') {
   setCookie(name, '', -1, domain);
 }

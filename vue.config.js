@@ -7,7 +7,7 @@ glob.sync('./src/pages/**/main.js').forEach((filePath) => {
   const chunk = filePath.split('./src/pages/')[1].split('/main.js')[0];
   pages[chunk] = {
     entry: filePath,
-    template: 'public/index.html',
+    template: `public/${chunk}.html`,
     title: titles[chunk],
     chunks: ['chunk-vendors', 'chunk-common', chunk]
   };

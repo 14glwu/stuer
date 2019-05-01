@@ -43,7 +43,7 @@
             :key="index"
           >
             <router-link :to="`/profile/${$route.params.id}${nav.href}`">
-              <svg class="profile-nav-item-logo" aria-hidden="true">
+              <svg class="icon profile-nav-item-logo" aria-hidden="true">
                 <use :xlink:href="nav.icon"></use>
               </svg>
               <span>{{nav.name}}</span>

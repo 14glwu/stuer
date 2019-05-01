@@ -143,8 +143,9 @@ input:-ms-input-placeholder {
   border-bottom: 2px solid $primary-color;
 }
 .tab-icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
+  vertical-align: -5px;
 }
 .title {
   display: inline;
