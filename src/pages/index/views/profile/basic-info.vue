@@ -65,10 +65,6 @@
               <el-radio :label="1">毕业生</el-radio>
               <el-radio :label="2">在校生</el-radio>
               <el-radio :label="3">教师</el-radio>
-              <el-radio :label="4" v-if="form.role === 7">运营管理员</el-radio>
-              <el-radio :label="5" v-if="form.role === 7">学校管理员</el-radio>
-              <el-radio :label="6" v-if="form.role === 7">企业管理员</el-radio>
-              <el-radio :label="7" v-if="form.role === 7">超级管理员</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="`${meOrHim}的学号：`" v-if="form.role === 1 || form.role === 2">
@@ -176,10 +172,11 @@ export default {
         1: '毕业生',
         2: '在校生',
         3: '老师',
-        4: '运营管理员',
-        5: '学校管理员',
-        6: '企业管理员',
-        7: '超级管理员'
+        4: '企业用户',
+        5: '运营管理员',
+        6: '学校管理员',
+        7: '企业管理员',
+        8: '超级管理员'
       };
       return map[role] || '毕业生';
     },

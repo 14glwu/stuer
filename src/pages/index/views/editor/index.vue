@@ -28,7 +28,7 @@
           <el-select v-model.number="form.type" placeholder="请选择发表区域">
             <el-option label="讨论区" :value="1"></el-option>
             <el-option label="树洞" :value="2"></el-option>
-            <el-option label="求职区" :value="3"></el-option>
+            <el-option label="找对象" :value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="帖子标签" :label-width="formLabelWidth">
@@ -71,9 +71,6 @@ export default {
         type: '', // 帖子类型
         tags: [
           // 帖子标签
-          '标签一',
-          '标签二',
-          '标签三'
         ]
       },
       dialogVisible: false,

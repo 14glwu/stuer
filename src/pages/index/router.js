@@ -34,6 +34,15 @@ export default new Router({
       }
     },
     {
+      // 找对象
+      path: '/find-love',
+      name: 'find-love',
+      component: () => import(/* webpackChunkName: "find-love" */ './views/find-love/index.vue'),
+      meta: {
+        needLogin: false
+      }
+    },
+    {
       // 学校通知
       path: '/oa',
       name: 'oa',

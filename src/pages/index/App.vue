@@ -118,10 +118,6 @@ html {
   max-width: 960px;
   margin: 0 auto;
 }
-
-.content-normal {
-  max-width: 960px;
-}
 .footer {
   grid-area: footer;
   width: 100%;

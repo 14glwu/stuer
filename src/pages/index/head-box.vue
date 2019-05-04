@@ -134,6 +134,10 @@ export default {
           href: '/tree-hole'
         },
         {
+          name: '找对象',
+          href: '/find-love'
+        },
+        {
           name: '求职区',
           href: '/job'
         },
@@ -205,7 +209,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  max-width: 960px;
+  max-width: 1200px;
   height: 5rem;
   margin: 0 auto;
   a {
