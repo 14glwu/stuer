@@ -105,7 +105,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import { getPosts } from '@/api';
 import defaultAvatar from '@/assets/default-avatar.png';
 export default {
@@ -119,9 +118,6 @@ export default {
       posts: [],
       defaultAvatar
     };
-  },
-  computed: {
-    ...mapGetters(['user'])
   },
   async created() {
     const result = await getPosts({

@@ -1,10 +1,13 @@
 <template>
   <div class="editor-container block">
     <div class="editor-header">
-      <div class="header_name">{{header_name}}</div>
-      <div class="header-opt">
+      <div class="header-left">
+        <div class="header-name">{{header_name}}</div>
+        <a href="javascript:void(0)" class="header-daft">{{header_draft}}</a>
+      </div>
+      <div>
         <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary" @click="confirmPost">确定</el-button>
+        <el-button size="small" type="primary" @click="setPost">确定</el-button>
       </div>
     </div>
     <div class="post-title">
@@ -13,13 +16,12 @@
         class="title-input"
         placeholder="文章标题：一句话说明你遇到的问题或想分享的经验"
         v-model="form.title"
+        @input="titleChange"
       >
     </div>
     <div class="editor">
       <div ref="editor_bar" class="editor-bar"></div>
-      <div ref="editor_main" class="editor-main" style="z-index: 1000 !important">
-        <p>请输入内容</p>
-      </div>
+      <div ref="editor_main" class="editor-main"></div>
     </div>
 
     <el-dialog title="帖子设置" class="dialog" :visible.sync="dialogVisible" top="25vh">
@@ -31,7 +33,7 @@
             <el-option label="找对象" :value="3"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="帖子标签" :label-width="formLabelWidth">
+        <el-form-item label="帖子标签" :label-width="formLabelWidth" v-if="form.type === 1">
           <el-tag
             :key="tag"
             v-for="tag in form.tags"
@@ -53,50 +55,98 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitPost">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { createPost, updatePost, getPostById } from '@/api';
 export default {
   data() {
     return {
       header_name: '写帖子',
-      editor: null,
+      header_draft: '',
+      editor: null, // 富文本编辑器
+      isEdit: false, // 用于判断是编辑帖子还是发表帖子
       form: {
         title: '', // 帖子标题
         content: '', // 帖子内容
-        type: '', // 帖子类型
+        type: 1, // 帖子发表区域，默认为讨论区
         tags: [
           // 帖子标签
         ]
       },
+      titleTimer: null,
+      contentTimer: null,
       dialogVisible: false,
       formLabelWidth: '120px',
       inputVisible: false,
       inputValue: ''
     };
   },
-  mounted() {
-    const E = window.wangEditor;
-    this.editor = new E(this.$refs.editor_bar, this.$refs.editor_main);
-    this.editor.create();
+  computed: {
+    ...mapGetters(['user'])
+  },
+  async mounted() {
+    this.initEditor(); // 初始化编辑器
+    await this.initContent(); // 初始化帖子内容
+  },
+  beforeDestroy() {
+    // 清空页面的定时器
+    if (this.contentTimer) {
+      clearTimeout(this.contentTimer);
+      self.contentTimer = null;
+    }
+    if (this.titleTimer) {
+      clearTimeout(this.titleTimer);
+      self.titleTimer = null;
+    }
   },
   methods: {
-    confirmPost() {
-      this.dialogVisible = true;
+    // 提交帖子
+    async submitPost() {
+      this.dialogVisible = false;
+      this.form.content = this.editor.txt.html(); // 将富文本内容赋值给表单的content
+      if (!this.isEdit) {
+        const result = await createPost(this.form);
+        if (result.code === 0) {
+          this.$message.success('帖子发表成功');
+        } else {
+          this.$message.error('帖子发表失败');
+        }
+      } else {
+        const result = await updatePost(this.form);
+        if (result.code === 0) {
+          this.$message.success('帖子更新成功');
+        } else {
+          this.$message.error('帖子更新失败');
+        }
+      }
     },
+    // 设置帖子
+    setPost() {
+      const text = this.editor.txt.text();
+      if (!text || !this.form.title) {
+        this.$message.error('帖子标题或内容不能为空');
+      } else {
+        this.dialogVisible = true;
+      }
+    },
+    // 删除标签
     handleClose(tag) {
       this.form.tags.splice(this.dynamicTags.indexOf(tag), 1);
     },
+    // 显示输入标签框
     showInput() {
       this.inputVisible = true;
       this.$nextTick((_) => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
+    // 输入标签
     handleInputConfirm() {
       const inputValue = this.inputValue;
       if (inputValue) {
@@ -104,6 +154,89 @@ export default {
       }
       this.inputVisible = false;
       this.inputValue = '';
+    },
+    // 监听标题的变化
+    titleChange() {
+      const self = this; // this在回调函数中会被改变，因此用self
+      self.header_draft = '草稿保存中...';
+      if (self.titleTimer) {
+        // 防抖处理
+        clearTimeout(self.titleTimer);
+        self.titleTimer = null;
+      }
+      const title = self.form.title;
+      // 监听输入变化,然后保存到storage中，从而实现草稿功能
+      self.titleTimer = setTimeout(function() {
+        localStorage.setItem('draftTitle', title);
+        self.header_draft = '草稿已保存';
+      }, 1500);
+    },
+    // 初始化编辑器
+    initEditor() {
+      const E = window.wangEditor;
+      this.editor = new E(this.$refs.editor_bar, this.$refs.editor_main);
+      this.editor.customConfig.zIndex = 100; // 层级
+      this.editor.customConfig.uploadImgServer = '/api/uploadImgsForPost'; // 上传图片到服务器的地址
+      this.editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 上传图片的最大大小
+      this.editor.customConfig.uploadImgMaxLength = 5; // 上传图片的最大个数
+      this.editor.customConfig.onchangeTimeout = 1000; // onchange 触发的延迟时间, 单位 ms
+      const self = this; // this在回调函数中会被改变，因此用self
+      // 错误监听
+      this.editor.customConfig.customAlert = function(info) {
+        // info 是需要提示的内容
+        self.$message.error(info);
+      };
+
+      // 监听帖子内容的变化
+      this.editor.customConfig.onchange = (html) => {
+        if (self.contentTimer) {
+          // 防抖处理
+          clearTimeout(self.contentTimer);
+          self.contentTimer = null;
+        }
+        // 监听输入变化,然后保存到storage中，从而实现草稿功能
+        self.header_draft = '草稿保存中...';
+        localStorage.setItem('draft', html);
+        self.contentTimer = setTimeout(function() {
+          self.header_draft = '草稿已保存';
+        }, 2000);
+      };
+      this.editor.create();
+    },
+    // 初始化帖子内容
+    async initContent() {
+      // 如果草稿箱不为空的话
+      const draft = localStorage.getItem('draft');
+      const draftTitle = localStorage.getItem('draftTitle');
+      if (draft) {
+        this.editor.txt.html(draft);
+      }
+      if (draftTitle) {
+        this.form.title = draftTitle;
+      }
+      // 如果设置完草稿后，文本内容为空的话，则设置默认提示文字
+      const text = this.editor.txt.text();
+      if (!text) {
+        this.editor.txt.html('<p>来写点东西，抒发你心中所想吧！！！</p>');
+      }
+      // 如果是编辑帖子
+      if (this.$route.query.id) {
+        this.isEdit = true;
+        const result = await getPostById(this.$route.query.id);
+        if (result.code === 0) {
+          const post = result.data;
+          // 判断是否为帖子主人
+          if (post.userId !== this.user.id) {
+            window.location.href = '/';
+          } else {
+            this.form = post;
+            if (post.content) {
+              // 如果帖子不为空的话
+              this.editor.txt.html(post.content);
+            }
+          }
+        }
+      }
     }
   }
 };
@@ -125,14 +258,26 @@ export default {
   width: 100%;
   padding: 0 2rem;
   height: 5rem;
-  font-size: 2rem;
   border-bottom: 1px solid #f1f1f1;
 }
-.header_name {
-  color: $primary-color;
-  font-weight: bold;
-  &:before {
-    content: '>> ';
+.header {
+  &-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  &-daft {
+    font-size: 1.2rem;
+    color: $link-color;
+  }
+  &-name {
+    margin-right: 1rem;
+    font-size: 2rem;
+    color: $primary-color;
+    font-weight: bold;
+    &:before {
+      content: '>> ';
+    }
   }
 }
 .post-title {

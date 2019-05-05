@@ -78,6 +78,13 @@ export default new Router({
       }
     },
     {
+      path: '/posts/:id',
+      component: () => import(/* webpackChunkName: "posts" */ './views/posts/index.vue'),
+      meta: {
+        needLogin: false
+      }
+    },
+    {
       path: '/profile/:id',
       component: () => import(/* webpackChunkName: "profile" */ './views/profile/index.vue'),
       meta: {
