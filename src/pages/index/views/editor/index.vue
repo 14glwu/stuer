@@ -14,7 +14,7 @@
       <input
         type="text"
         class="title-input"
-        placeholder="文章标题：一句话说明你遇到的问题或想分享的经验"
+        placeholder="帖子标题：一句话说明你遇到的问题或想分享的经验"
         v-model="form.title"
         @input="titleChange"
       >
@@ -29,7 +29,6 @@
         <el-form-item label="发表区域" :label-width="formLabelWidth">
           <el-select v-model.number="form.type" placeholder="请选择发表区域">
             <el-option label="讨论区" :value="1"></el-option>
-            <el-option label="树洞" :value="2"></el-option>
             <el-option label="找对象" :value="3"></el-option>
           </el-select>
         </el-form-item>
@@ -74,7 +73,7 @@ export default {
       form: {
         title: '', // 帖子标题
         content: '', // 帖子内容
-        type: 1, // 帖子发表区域，默认为讨论区
+        type: 1, // 帖子发表区域，默认为1讨论区
         tags: [
           // 帖子标签
         ]
@@ -109,6 +108,18 @@ export default {
     // 提交帖子
     async submitPost() {
       this.dialogVisible = false;
+
+      // 参数校验
+      const text = this.editor.txt.text();
+      if (!text) {
+        this.$message.error('内容不能为空');
+        return;
+      }
+      if (this.form.type !== 2 && !this.form.title) {
+        this.$message.error('标题不能为空');
+        return;
+      }
+
       this.form.content = this.editor.txt.html(); // 将富文本内容赋值给表单的content
       if (!this.isEdit) {
         const result = await createPost(this.form);
@@ -128,16 +139,11 @@ export default {
     },
     // 设置帖子
     setPost() {
-      const text = this.editor.txt.text();
-      if (!text || !this.form.title) {
-        this.$message.error('帖子标题或内容不能为空');
-      } else {
-        this.dialogVisible = true;
-      }
+      this.dialogVisible = true;
     },
     // 删除标签
     handleClose(tag) {
-      this.form.tags.splice(this.dynamicTags.indexOf(tag), 1);
+      this.form.tags.splice(this.form.tags.indexOf(tag), 1);
     },
     // 显示输入标签框
     showInput() {
@@ -225,8 +231,8 @@ export default {
         const result = await getPostById(this.$route.query.id);
         if (result.code === 0) {
           const post = result.data;
-          // 判断是否为帖子主人
-          if (post.userId !== this.user.id) {
+          // 判断是否为帖子主人,不是则跳转至首页，当然如果帖子类型为树洞，也跳转至首页
+          if (post.userId !== this.user.id || post.type === 2) {
             window.location.href = '/';
           } else {
             this.form = post;

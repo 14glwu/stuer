@@ -21,7 +21,8 @@ import {
   Radio,
   RadioGroup,
   Cascader,
-  Upload
+  Upload,
+  Pagination
 } from 'element-ui';
 
 Vue.use(Form);
@@ -37,6 +38,7 @@ Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(Cascader);
 Vue.use(Upload);
+Vue.use(Pagination);
 
 Vue.config.productionTip = false;
 Vue.prototype.$message = Message;

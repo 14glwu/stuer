@@ -7,8 +7,11 @@
       <div class="discuss-main">
         <div class="discuss-main-head">
           <ul class="discuss-tabs">
-            <li v-for="(type, index) in selectTypeOpts" :key="index" class="tabs-item">
-              <span class="tabs-item-label">{{type}}</span>
+            <li v-for="(tabLabel, index) in tabOpts" :key="index" class="tabs-item">
+              <span
+                :class="{'tabs-item-label':true, active: index === tabActive}"
+                @click="handleTabClick(index)"
+              >{{tabLabel}}</span>
               <span class="seperate-pipe">|</span>
             </li>
           </ul>
@@ -55,6 +58,15 @@
               </div>
             </li>
           </ul>
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :page-count="11"
+            :total="total"
+            :page-size="pageSize"
+            :current-page="pageIndex"
+            @current-change="handlePageChange"
+          ></el-pagination>
         </div>
       </div>
     </div>
@@ -110,28 +122,41 @@ import defaultAvatar from '@/assets/default-avatar.png';
 export default {
   data() {
     return {
-      selectTypeOpts: ['最新发表', '最新回复', '热门帖', '精华帖'],
-      selectType: 0, // 最新发表
-      pageIndex: 1,
-      pageSize: 15,
-      type: 1,
+      tabOpts: ['最新发表', '最新回复', '热门帖', '精华帖'],
+      tabActive: 0,
+      pageIndex: 1, // 页码
+      pageSize: 10, // 页面大小
+      total: 0, // 数据总量
+      type: 1, // 帖子类型，即发表区域
+      order: 1, // 排序方式，1最新发表，2最新回复，3热门贴，4精华帖 （后两个不适用于树洞）
       posts: [],
       defaultAvatar
     };
   },
   async created() {
-    const result = await getPosts({
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      type: this.type
-    });
-    if (result.code === 0) {
-      this.posts = result.data.posts;
-    }
+    await this.getPostsData();
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
+    async handleTabClick(index) {
+      this.tabActive = index;
+      this.order = index + 1;
+      await this.getPostsData();
+    },
+    async getPostsData() {
+      const result = await getPosts({
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        type: this.type,
+        order: this.order
+      });
+      if (result.code === 0) {
+        this.total = result.data.count;
+        this.posts = result.data.posts;
+      }
+    },
+    async handlePageChange(index) {
+      this.pageIndex = index;
+      await this.getPostsData();
     }
   }
 };
@@ -160,6 +185,11 @@ export default {
 }
 .discuss-main {
   padding: 2rem;
+  &-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 .discuss-tabs {
   display: flex;
@@ -177,6 +207,9 @@ export default {
     &:hover {
       color: $primary-color;
     }
+    &.active {
+      color: $primary-color;
+    }
   }
 }
 .seperate-pipe {
@@ -185,6 +218,7 @@ export default {
 }
 .post {
   &-list {
+    margin-bottom: 2rem;
     li + li {
       margin-top: 1.5rem;
       padding-top: 1.5rem;
