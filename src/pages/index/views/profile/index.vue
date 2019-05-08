@@ -42,7 +42,11 @@
             v-for="(nav, index) in navs"
             :key="index"
           >
-            <router-link :to="`/profile/${$route.params.id}${nav.href}`">
+            <!-- 在是我的情况下全显示，不是我的情况下，不显示设置和更多信息 -->
+            <router-link
+              :to="`/profile/${$route.params.id}${nav.href}`"
+              v-if="amI || ( index !== 4 && index !== 5)"
+            >
               <svg class="icon profile-nav-item-logo" aria-hidden="true">
                 <use :xlink:href="nav.icon"></use>
               </svg>
@@ -92,17 +96,17 @@ export default {
           href: '/basicInfo',
           icon: '#icon-user',
           name: '基本信息'
+        },
+        {
+          href: '/moreInfo',
+          icon: '#icon-more-info',
+          name: '更多信息'
+        },
+        {
+          href: '/setting',
+          icon: '#icon-setting',
+          name: '设置'
         }
-        // {
-        //   href: '/moreInfo',
-        //   icon: '#icon-more-info',
-        //   name: '更多信息'
-        // },
-        // {
-        //   href: '/setting',
-        //   icon: '#icon-setting',
-        //   name: '设置'
-        // }
       ],
       userExist: true // 用户是否存在,默认为true
     };
@@ -152,38 +156,6 @@ export default {
       if (to.params && from.params && to.params.id !== from.params.id) {
         this.reload();
       }
-    },
-    pageUser(pageUser) {
-      let navs = this.navs.slice();
-      // 用户角色为学生用户后，可以看到 更多信息和设置
-      if (pageUser && pageUser.role < 3) {
-        const flag1 = navs.some((item) => item.href === '/moreInfo');
-        if (!flag1) {
-          navs.push({
-            href: '/moreInfo',
-            icon: '#icon-more-info',
-            name: '更多信息'
-          });
-        }
-        const flag2 = navs.some((item) => item.href === '/setting');
-        if (!navs.some((item) => item.href === '/setting')) {
-          navs.push({
-            href: '/setting',
-            icon: '#icon-setting',
-            name: '设置'
-          });
-        }
-      }
-      // 不是学生的用户不需要展示更多信息,不是本人也无法看到更多信息
-      if (pageUser && pageUser.role > 2) {
-        navs = navs.filter((item) => item.href !== '/moreInfo');
-      }
-      // 不是本人也无法看到更多信息和设置
-      if (!this.amI) {
-        navs = navs.filter((item) => item.href !== '/setting');
-        navs = navs.filter((item) => item.href !== '/moreInfo');
-      }
-      this.navs = navs;
     }
   },
   async created() {
@@ -418,7 +390,7 @@ export default {
 }
 .userNotFound {
   padding: 4rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: $link-color;
   text-align: center;
 }

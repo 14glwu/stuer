@@ -2,7 +2,7 @@
   <div class="more-info" v-if="amI">
     <div class="more-info-head">
       <div class="head-title">更多信息</div>
-      <div class="head-opt" v-if="amI">
+      <div class="head-opt">
         <el-button size="small" v-if="isEdit" @click="cancel">取消</el-button>
         <el-button type="primary" size="small" v-if="isEdit" @click="saveUserInfo">保存</el-button>
         <el-button type="primary" size="small" @click="editUserInfo" v-else>编辑</el-button>
@@ -22,8 +22,13 @@
           <el-form-item label="真实姓名：">
             <el-input v-model="form.name" class="form-input"></el-input>
           </el-form-item>
-          <el-form-item label="我的年龄：">
-            <el-input v-model.number="form.age" class="form-input age-input"></el-input>
+          <el-form-item label="我的生日：">
+            <el-date-picker
+              v-model="form.birthTime"
+              type="date"
+              placeholder="选择日期"
+              value-format="timestamp"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="我的专业：">
             <el-cascader :options="majorOpts" :show-all-levels="false" v-model="selectMajor"></el-cascader>
@@ -62,8 +67,8 @@
           <el-form-item label="真实姓名：">
             <span class="value-show">{{ form.name || '-' }}</span>
           </el-form-item>
-          <el-form-item label="我的年龄：">
-            <span class="value-show">{{ form.age || '-' }}</span>
+          <el-form-item label="我的生日：">
+            <span class="value-show">{{ getBirthTime(form.birthTime) }}</span>
           </el-form-item>
           <el-form-item label="我的专业：">
             <span class="value-show">{{ getMajorLabel(form.majorId) }}</span>
@@ -96,14 +101,14 @@ export default {
       isEdit: false, // 是否是编辑状态
       form: {
         name: '',
-        age: undefined,
         majorId: undefined,
         academyId: undefined,
         mSalary: undefined,
         ySalary: undefined,
         companyId: undefined,
         idCard: '',
-        idCardType: undefined
+        idCardType: undefined,
+        birthTime: 1557252511822
       },
       rules: {
         name: [{ max: 10, message: '名字长度需小于10个字符', trigger: 'blur' }]
@@ -130,12 +135,6 @@ export default {
     }
   },
   watch: {
-    async isEdit() {
-      if (!this.majorOpts.length || !this.companyOpts.length) {
-        // 避免重复请求
-        await Promise.all([this.getMajors(), this.getCompanies()]);
-      }
-    },
     $route(to, from) {
       if (to.hash === '#edit') {
         this.isEdit = true;
@@ -150,6 +149,7 @@ export default {
       this.isEdit = true;
     }
     this.form = Object.assign({}, this.pageUser);
+    await Promise.all([this.getMajors(), this.getCompanies()]);
   },
   methods: {
     async getMajors() {
@@ -170,6 +170,9 @@ export default {
       if (result.code === 0) {
         this.companyOpts = result.data;
       }
+    },
+    getBirthTime(timestamp) {
+      return this.$dayjs(timestamp).format('YYYY-MM-DD') || '-';
     },
     getCompanyName(companyId) {
       let companyName;

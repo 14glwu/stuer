@@ -12,7 +12,7 @@
                 :class="{'tabs-item-label':true, active: index === tabActive}"
                 @click="handleTabClick(index)"
               >{{tabLabel}}</span>
-              <span class="seperate-pipe">|</span>
+              <span class="seperate-pipe" v-if="!(index === tabOpts.length - 1)">|</span>
             </li>
           </ul>
         </div>
@@ -24,7 +24,7 @@
               </router-link>
               <div class="post-detail">
                 <div class="post-detail-head">
-                  <router-link to="/discuss/1" target="_blank">{{post.title}}</router-link>
+                  <router-link :to="`/discuss/${post.id}`" target="_blank">{{post.title}}</router-link>
                   <span class="post-top" v-if="post.top">置顶</span>
                   <span class="post-highlight" v-if="post.highlight">精</span>
                 </div>
@@ -38,22 +38,13 @@
                       class="post-time"
                     >于&nbsp;&nbsp;{{$dayjs(post.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
                   </div>
-                  <div class="foot-opts">
-                    <span>
-                      回复
+                  <ul class="foot-opts">
+                    <li v-for="(label,index)  in legendOpts " :key="index">
+                      <span>{{ label }}</span>
                       <span class="opts-num">{{ parseInt((Math.random()+"").slice(2,4),10) }}</span>
-                    </span>
-                    <span class="seperate-pipe">|</span>
-                    <span>
-                      赞
-                      <span class="opts-num">{{ parseInt((Math.random()+"").slice(2,4),10) }}</span>
-                    </span>
-                    <span class="seperate-pipe">|</span>
-                    <span>
-                      浏览
-                      <span class="opts-num">{{ parseInt((Math.random()+"").slice(2,4),10) }}</span>
-                    </span>
-                  </div>
+                      <span class="seperate-pipe" v-if="!(index === legendOpts.length - 1)">|</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </li>
@@ -128,8 +119,9 @@ export default {
       pageSize: 10, // 页面大小
       total: 0, // 数据总量
       type: 1, // 帖子类型，即发表区域
-      order: 1, // 排序方式，1最新发表，2最新回复，3热门贴，4精华帖 （后两个不适用于树洞）
+      order: 1, // 排序方式，1最新发表，2最新回复，3热门贴，4精华帖 （后两个不适用于树洞、求职区）
       posts: [],
+      legendOpts: ['点赞', '评论', '浏览'],
       defaultAvatar
     };
   },
@@ -167,15 +159,15 @@ export default {
 .discuss_container {
   display: flex;
   justify-content: space-between;
-  padding: 2rem 0;
+  padding: 1rem 0;
   color: #333;
 }
 .content-left {
   width: 72%;
 }
 .content-right {
-  width: 26%;
-  margin-left: 1.5rem;
+  width: 27%;
+  margin-left: 1rem;
 }
 .discuss-header {
   display: flex;
@@ -198,11 +190,9 @@ export default {
   margin-bottom: 2rem;
 }
 .tabs-item {
+  font-size: 1.3rem;
   &-label {
     color: #888;
-    font-size: 1.3rem;
-    line-height: 1.3rem;
-    margin-right: 1rem;
     cursor: pointer;
     &:hover {
       color: $primary-color;
@@ -213,13 +203,13 @@ export default {
   }
 }
 .seperate-pipe {
-  margin-right: 1rem;
+  margin: 0 1em;
   color: #eee;
 }
 .post {
   &-list {
     margin-bottom: 2rem;
-    li + li {
+    &-item + &-item {
       margin-top: 1.5rem;
       padding-top: 1.5rem;
       border-top: 1px solid #e2e2e2;
@@ -257,11 +247,10 @@ export default {
       justify-content: space-between;
       align-items: center;
       .foot-opts {
-        span {
-          margin: 0 0.3rem;
-        }
+        display: flex;
+        align-items: center;
         .opts-num {
-          margin-left: 0.3rem;
+          margin-left: 0.5rem;
         }
       }
     }

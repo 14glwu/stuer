@@ -47,6 +47,9 @@
               <span>女生</span>
             </a>
           </el-form-item>
+          <el-form-item :label="`${meOrHim}的年龄：`">
+            <el-input v-model.number="form.age" class="form-input age-input"></el-input>
+          </el-form-item>
           <el-form-item :label="`${meOrHim}的学历：`">
             <el-select v-model="form.eduLevel" placeholder="请选择">
               <el-option
@@ -93,6 +96,9 @@
               </svg>
             </div>
           </el-form-item>
+          <el-form-item :label="`${meOrHim}的年龄：`">
+            <span class="value-show">{{ form.age || '-' }}</span>
+          </el-form-item>
           <el-form-item :label="`${meOrHim}的学历：`">
             <span class="value-show">{{ form.eduLevel || '-' }}</span>
           </el-form-item>
@@ -125,6 +131,7 @@ export default {
         nickName: '',
         personSign: '',
         gender: undefined,
+        age: undefined,
         eduLevel: '',
         phone: '',
         role: undefined,

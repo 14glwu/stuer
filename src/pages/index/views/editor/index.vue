@@ -29,7 +29,9 @@
         <el-form-item label="发表区域" :label-width="formLabelWidth">
           <el-select v-model.number="form.type" placeholder="请选择发表区域">
             <el-option label="讨论区" :value="1"></el-option>
+            <el-option label="树洞" :value="2"></el-option>
             <el-option label="找对象" :value="3"></el-option>
+            <el-option label="求职区" :value="4"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="帖子标签" :label-width="formLabelWidth" v-if="form.type === 1">
@@ -233,7 +235,7 @@ export default {
           const post = result.data;
           // 判断是否为帖子主人,不是则跳转至首页，当然如果帖子类型为树洞，也跳转至首页
           if (post.userId !== this.user.id || post.type === 2) {
-            window.location.href = '/';
+            this.$route.push('/');
           } else {
             this.form = post;
             if (post.content) {
@@ -308,29 +310,28 @@ export default {
   width: 100%;
   height: calc(100% - 10rem);
   padding: 0 2rem;
-  font-size: 14px;
+  font-size: 1.25rem;
   .editor-bar {
     border: 1px solid #ddd;
   }
   .editor-main {
-    z-index: 800 !important;
-    height: calc(100% - 48px);
+    height: calc(100% - 4rem);
     border: 1px solid #ddd;
   }
 }
 .el-tag + .el-tag {
-  margin-left: 10px;
+  margin-left: 1rem;
 }
 .button-new-tag {
-  margin-left: 10px;
-  height: 32px;
-  line-height: 30px;
+  margin-left: 1rem;
+  height: 3rem;
+  line-height: 3rem;
   padding-top: 0;
   padding-bottom: 0;
 }
 .input-new-tag {
-  width: 90px;
-  margin-left: 10px;
+  width: 8rem;
+  margin-left: 1rem;
   vertical-align: bottom;
 }
 </style>
