@@ -109,10 +109,10 @@
             <span class="value-show">{{ getRoleName(form.role) }}</span>
           </el-form-item>
           <el-form-item :label="`${meOrHim}的学号：`" v-if="form.role === 1 || form.role === 2">
-            <span class="value-show">{{ form.stuNum }}</span>
+            <span class="value-show">{{ form.stuNum || '-' }}</span>
           </el-form-item>
           <el-form-item label="教师编号：" v-if="form.role === 3">
-            <span class="value-show">{{ form.teaNum }}</span>
+            <span class="value-show">{{ form.teaNum || '-' }}</span>
           </el-form-item>
         </div>
       </el-form>

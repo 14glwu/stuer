@@ -6,41 +6,36 @@
       </div>
       <div class="discuss-main">
         <div class="discuss-main-head">
-          <ul class="discuss-tabs">
-            <li v-for="(tabLabel, index) in tabOpts" :key="index" class="tabs-item">
-              <span
-                :class="{'tabs-item-label':true, active: index === tabActive}"
-                @click="handleTabClick(index)"
-              >{{tabLabel}}</span>
-              <span class="seperate-pipe" v-if="!(index === tabOpts.length - 1)">|</span>
-            </li>
-          </ul>
+          <div class="editor">
+            <div ref="editor_bar" class="editor-bar"></div>
+            <div ref="editor_main" class="editor-main">
+              <p>有什么秘密或者悄悄话就丢进来吧！！！</p>
+            </div>
+            <div class="editor-foot">
+              <el-button type="primary" size="small" @click="submitTreeHole">丢进树洞</el-button>
+            </div>
+          </div>
         </div>
         <div class="discuss-main-content">
           <ul class="post-list">
             <li class="post-list-item" v-for="(post, index) in posts" :key="index">
-              <router-link :to="`/profile/${post.userId}`">
-                <img :src="defaultAvatar" alt="用户头像" class="post-avatar">
-              </router-link>
+              <div class="post-content-box">
+                <div v-html="post.content"></div>
+              </div>
               <div class="post-detail">
-                <div class="post-detail-head">
-                  <div v-html="post.content"></div>
+                <div class="post-detail-tips">
+                  <span>匿名用户&nbsp;</span>
+                  <span
+                    class="post-time"
+                  >于&nbsp;&nbsp;{{$dayjs(post.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
                 </div>
-                <div class="post-detail-foot">
-                  <div class="foot-tips">
-                    <span>匿名用户&nbsp;</span>
-                    <span
-                      class="post-time"
-                    >于&nbsp;&nbsp;{{$dayjs(post.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
-                  </div>
-                  <ul class="foot-opts">
-                    <li v-for="(label,index)  in legendOpts " :key="index">
-                      <span>{{ label }}</span>
-                      <span class="opts-num">{{ parseInt((Math.random()+"").slice(2,4),10) }}</span>
-                      <span class="seperate-pipe" v-if="!(index === legendOpts.length - 1)">|</span>
-                    </li>
-                  </ul>
-                </div>
+                <ul class="post-detail-opts">
+                  <li v-for="(label,index)  in legendOpts " :key="index">
+                    <span>{{ label }}</span>
+                    <span class="opts-num">{{ parseInt((Math.random()+"").slice(2,4),10) }}</span>
+                    <span class="seperate-pipe" v-if="!(index === legendOpts.length - 1)">|</span>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -106,9 +101,11 @@
 <script>
 import { getPosts } from '@/api';
 import defaultAvatar from '@/assets/default-avatar.png';
+import { createPost } from '@/api';
 export default {
   data() {
     return {
+      editor: null,
       tabOpts: ['最新发表', '最新回复'],
       tabActive: 0,
       pageIndex: 1, // 页码
@@ -121,14 +118,61 @@ export default {
       defaultAvatar
     };
   },
-  async created() {
+  async mounted() {
+    this.initEditor();
     await this.getPostsData();
   },
   methods: {
-    async handleTabClick(index) {
-      this.tabActive = index;
-      this.order = index + 1;
-      await this.getPostsData();
+    async submitTreeHole() {
+      const text = this.editor.txt.text();
+      if (!text) {
+        this.$message.error('内容不能为空');
+      }
+      const html = this.editor.txt.html();
+      const result = await createPost({
+        content: html,
+        type: 2
+      });
+      if (result.code === 0) {
+        this.$message.success('发表成功');
+        await this.getPostsData(); // 更新树洞列表
+      } else {
+        this.$message.success('发表失败');
+      }
+    },
+    // 初始化编辑器
+    initEditor() {
+      const E = window.wangEditor;
+      this.editor = new E(this.$refs.editor_bar, this.$refs.editor_main);
+      this.editor.customConfig.zIndex = 100; // 层级
+      this.editor.customConfig.uploadImgServer = '/api/uploadImgsForPost'; // 上传图片到服务器的地址
+      this.editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 上传图片的最大大小
+      this.editor.customConfig.uploadImgMaxLength = 5; // 上传图片的最大个数
+      const self = this; // this在回调函数中会被改变，因此用self
+      // 错误监听
+      this.editor.customConfig.customAlert = function(info) {
+        // info 是需要提示的内容
+        self.$message.error(info);
+      };
+      this.editor.customConfig.menus = [
+        'head',
+        'bold',
+        'italic',
+        'underline',
+        'strikeThrough',
+        'link',
+        'list',
+        'justify',
+        'quote',
+        'emoticon',
+        'image',
+        'table',
+        'code',
+        'undo',
+        'redo'
+      ];
+
+      this.editor.create();
     },
     async getPostsData() {
       const result = await getPosts({
@@ -141,10 +185,6 @@ export default {
         this.total = result.data.count;
         this.posts = result.data.posts;
       }
-    },
-    async handlePageChange(index) {
-      this.pageIndex = index;
-      await this.getPostsData();
     }
   }
 };
@@ -173,31 +213,35 @@ export default {
 }
 .discuss-main {
   padding: 2rem;
+  &-head {
+    height: 20rem;
+  }
   &-content {
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 }
-.discuss-tabs {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-.tabs-item {
-  font-size: 1.3rem;
-  &-label {
-    color: #888;
-    cursor: pointer;
-    &:hover {
-      color: $primary-color;
-    }
-    &.active {
-      color: $primary-color;
-    }
+
+.editor {
+  width: 100%;
+  height: calc(100% - 4rem);
+  font-size: 1.25rem;
+  &-bar {
+    border: 1px solid #ddd;
+  }
+  &-main {
+    height: calc(100% - 3rem);
+    border: 1px solid #ddd;
+  }
+  &-foot {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
   }
 }
+
 .seperate-pipe {
   margin: 0 1em;
   color: #eee;
@@ -210,44 +254,31 @@ export default {
       padding-top: 1.5rem;
       border-top: 1px solid #e2e2e2;
     }
-    &-item {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
   }
-  &-avatar {
-    border-radius: 50%;
-    width: 4rem;
-    height: 4rem;
+  &-content-box {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    background: #f6f6f6;
+    padding: 0.4rem 0.8rem;
+    margin: 1rem 0;
+    p {
+      margin: 0.4rem 0;
+      font-size: 1.25rem;
+      line-height: 1.5;
+    }
   }
   &-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    margin-left: 2rem;
     font-size: 1rem;
-    a {
-      color: #333;
-    }
-    &-head {
-      font-size: 1.3rem;
-      height: 1.5rem;
-      line-height: 1.5rem;
+    color: #888;
+    &-opts {
       display: flex;
-      justify-content: flex-start;
       align-items: center;
-    }
-    &-foot {
-      color: #888;
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .foot-opts {
-        display: flex;
-        align-items: center;
-        .opts-num {
-          margin-left: 0.5rem;
-        }
+      .opts-num {
+        margin-left: 0.5rem;
       }
     }
   }

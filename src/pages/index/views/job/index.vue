@@ -24,7 +24,7 @@
               </router-link>
               <div class="post-detail">
                 <div class="post-detail-head">
-                  <router-link :to="`/discuss/${post.id}`" target="_blank">{{post.title}}</router-link>
+                  <router-link :to="`/posts/${post.id}`" target="_blank">{{post.title}}</router-link>
                   <span class="post-top" v-if="post.top">置顶</span>
                 </div>
                 <div class="post-detail-foot">

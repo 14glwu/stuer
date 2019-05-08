@@ -32,6 +32,7 @@
       </div>
       <div class="profile-info-opt">
         <button class="edit-profile-btn" @click="routeToUserEdit" v-if="amI">编辑个人资料</button>
+        <button class="edit-profile-btn" @click="followed = !followed" v-else>{{followLabel}}</button>
       </div>
     </div>
     <div class="profile-main" v-if="userExist">
@@ -108,6 +109,7 @@ export default {
           name: '设置'
         }
       ],
+      followed: false, // 是否关注
       userExist: true // 用户是否存在,默认为true
     };
   },
@@ -149,6 +151,9 @@ export default {
         return map[this.pageUser.role] || '毕业生';
       }
       return '毕业生';
+    },
+    followLabel() {
+      return this.followed ? '取消关注' : '关注';
     }
   },
   watch: {
@@ -333,6 +338,10 @@ export default {
   border-radius: 4px;
   outline: none;
   cursor: pointer;
+  &:hover {
+    color: #fff;
+    background: $primary-color;
+  }
 }
 .profile-main {
   width: 100%;

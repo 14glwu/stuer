@@ -24,7 +24,7 @@
               </router-link>
               <div class="post-detail">
                 <div class="post-detail-head">
-                  <router-link :to="`/discuss/${post.id}`" target="_blank">{{post.title}}</router-link>
+                  <router-link :to="`/posts/${post.id}`" target="_blank">{{post.title}}</router-link>
                 </div>
                 <div class="post-detail-foot">
                   <div class="foot-tips">

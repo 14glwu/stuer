@@ -1,9 +1,9 @@
 <template>
-  <div class="discuss-wrap">
-    <div class="discuss-box block" v-if="postExist">
-      <div class="discuss-box-head">
-        <h1 class="discuss-title">{{post.title}}</h1>
-        <div class="discuss-author">
+  <div class="post-wrap">
+    <div class="post-box block" v-if="postExist">
+      <div class="post-box-head">
+        <h1 class="post-title">{{post.title}}</h1>
+        <div class="post-author">
           <router-link :to="`/profile/${post.userId}`">
             <img :src="post.userInfo.avatar || defaultAvatar" alt="用户头像" class="post-avatar">
           </router-link>
@@ -29,9 +29,11 @@
           </div>
         </div>
       </div>
-      <div class="discuss-box-main">
-        <div class="discuss-content" v-html="post.content"></div>
-        <div class="discuss-foot">
+      <div class="post-box-main">
+        <div class="post-content-box">
+          <div v-html="post.content"></div>
+        </div>
+        <div class="post-foot">
           <ul class="opt-list">
             <li v-for="(opt, index) in postOpts" :key="index">
               <a href="javascript:void(0)" class="opt-list-item">
@@ -48,7 +50,7 @@
     </div>
     <div class="comment-box block" v-if="postExist">
       <div class="comment-box-head">
-        <h1 class="discuss-title">{{commentCount}}条评论</h1>
+        <h1 class="post-title">{{commentCount}}条评论</h1>
         <el-button type="primary" size="small" icon="el-icon-edit">评论</el-button>
       </div>
       <div class="comment-box-main">
@@ -63,7 +65,7 @@
       <div class="editor">
         <div ref="editor_bar" class="editor-bar"></div>
         <div ref="editor_main" class="editor-main"></div>
-        <div class="edit-box-foot">
+        <div class="editor-foot">
           <el-button type="primary" size="small" icon="el-icon-edit">评论</el-button>
         </div>
       </div>
@@ -121,7 +123,7 @@ export default {
         }
       ],
       defaultAvatar,
-      postExist: true // 帖子是否存在，默认为true
+      postExist: true // 帖子是否存在，默认为true，此外当帖子类型为树洞时，也不展示帖子
     };
   },
   async mounted() {
@@ -134,6 +136,9 @@ export default {
       const result = await getPostById(id);
       if (result.code === 0) {
         this.post = result.data;
+        if (this.post.type === 2) {
+          this.postExist = false;
+        }
       } else {
         this.postExist = false;
       }
@@ -162,13 +167,13 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '~@/style/variables.scss';
-.discuss-wrap {
+.post-wrap {
   padding: 1rem 0;
   color: #333;
 }
-.discuss-box {
+.post-box {
   &-head {
     padding: 1.5rem 2rem;
     border-bottom: 1px solid #e2e2e2;
@@ -177,7 +182,7 @@ export default {
     padding: 1.5rem 2rem;
   }
 }
-.discuss {
+.post {
   &-author {
     display: flex;
     justify-content: flex-start;
@@ -198,8 +203,16 @@ export default {
       vertical-align: middle;
     }
   }
-  &-content {
+  &-content-box {
     font-size: 1.25rem;
+    line-height: 1.5;
+    padding: 0.4rem 0.8rem;
+    margin: 1rem 0;
+    p {
+      margin: 0.4rem 0;
+      font-size: 1.25rem;
+      line-height: 1.5;
+    }
   }
   &-foot {
     margin-top: 2rem;
@@ -291,22 +304,22 @@ export default {
   margin-top: 1rem;
   padding: 2rem;
   height: 25rem;
-  &-foot {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-  }
 }
 .editor {
   width: 100%;
   height: calc(100% - 5rem);
   font-size: 1.25rem;
-  .editor-bar {
+  &-bar {
     border: 1px solid #ddd;
   }
-  .editor-main {
+  &-main {
     height: 100%;
     border: 1px solid #ddd;
+  }
+  &-foot {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 .postNotFound {

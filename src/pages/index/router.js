@@ -78,9 +78,8 @@ export default new Router({
       }
     },
     {
-      path: '/discuss/:id',
-      component: () =>
-        import(/* webpackChunkName: "discuss-posts" */ './views/discuss-posts/index.vue'),
+      path: '/posts/:id',
+      component: () => import(/* webpackChunkName: "posts" */ './views/posts/index.vue'),
       meta: {
         needLogin: false
       }

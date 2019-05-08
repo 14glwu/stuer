@@ -77,10 +77,10 @@
             <span class="value-show">{{ getCompanyName(form.companyId) }}</span>
           </el-form-item>
           <el-form-item label="税前月薪：">
-            <span class="value-show">{{ form.mSalary }}</span>
+            <span class="value-show">{{ form.mSalary || '-' }}</span>
           </el-form-item>
           <el-form-item label="税前年薪：">
-            <span class="value-show">{{ form.ySalary }}</span>
+            <span class="value-show">{{ form.ySalary || '-' }}</span>
           </el-form-item>
           <el-form-item :label="getIdCardName(form.idCardType)" v-if="form.idCardType">
             <span class="value-show">{{ form.idCard }}</span>
@@ -172,7 +172,10 @@ export default {
       }
     },
     getBirthTime(timestamp) {
-      return this.$dayjs(timestamp).format('YYYY-MM-DD') || '-';
+      if (!timestamp) {
+        return '-';
+      }
+      return this.$dayjs(timestamp).format('YYYY-MM-DD');
     },
     getCompanyName(companyId) {
       let companyName;
@@ -181,7 +184,7 @@ export default {
           companyName = company.name;
         }
       });
-      return companyName;
+      return companyName || '-';
     },
     getIdCardName(type) {
       return `${this.idCardTypeList[type - 1]}：` || '';
