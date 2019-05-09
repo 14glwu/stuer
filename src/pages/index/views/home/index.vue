@@ -75,9 +75,6 @@
 import 'swiper/dist/css/swiper.css';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 import defaultAvatar from '@/assets/default-avatar.png';
-import banner1 from '@/assets/banner/banner1.jpg';
-import banner2 from '@/assets/banner/banner2.jpg';
-import banner3 from '@/assets/banner/banner3.jpg';
 
 import { getPosts } from '@/api';
 export default {
@@ -100,7 +97,11 @@ export default {
         },
         grabCursor: true
       },
-      swiperSlides: [banner1, banner2, banner3],
+      swiperSlides: [
+        'http://pr87jmetw.bkt.clouddn.com/img/banner/banner1.jpg',
+        'http://pr87jmetw.bkt.clouddn.com/img/banner/banner2.jpg',
+        'http://pr87jmetw.bkt.clouddn.com/img/banner/banner3.jpg'
+      ],
       modules: [
         {
           name: '讨论区',

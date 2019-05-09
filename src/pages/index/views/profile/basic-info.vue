@@ -144,7 +144,7 @@ export default {
           { max: 20, message: '昵称长度需小于20个字符', trigger: 'blur' }
         ],
         personSign: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { required: true, message: '请输入个性签名', trigger: 'blur' },
           { max: 100, message: '个性签名长度需小于100个字符', trigger: 'blur' }
         ]
       },

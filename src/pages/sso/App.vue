@@ -72,7 +72,8 @@ input:-ms-input-placeholder {
   height: 100%;
   position: fixed;
   background-size: cover;
-  background: url('~@/assets/background.png') no-repeat center center fixed;
+  background: url('http://pr87jmetw.bkt.clouddn.com/img/background.png') no-repeat center center
+    fixed;
 }
 .content_inner {
   display: block;
