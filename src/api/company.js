@@ -1,4 +1,4 @@
-import http from './http';
+import { http } from './http';
 
 export async function getCompanies() {
   const rsp = await http.get('/companies');

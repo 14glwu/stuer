@@ -3,3 +3,4 @@ export * from './user-info';
 export * from './major';
 export * from './company';
 export * from './post';
+export * from './oa';

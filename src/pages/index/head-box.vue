@@ -189,6 +189,8 @@ export default {
     async logout() {
       const result = await logout();
       if (result.code === 0) {
+        this.$store.commit('setUser', null);
+        this.$store.commit('loginStatus', false);
         localStorage.removeItem('isLogin');
         deleteCookie('auth_token', process.env.VUE_APP_DOMAIN);
         window.location.href = '/';

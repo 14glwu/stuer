@@ -85,6 +85,13 @@ export default new Router({
       }
     },
     {
+      path: '/oas/:id',
+      component: () => import(/* webpackChunkName: "oa-detail" */ './views/oa/detail.vue'),
+      meta: {
+        needLogin: true
+      }
+    },
+    {
       path: '/profile/:id',
       component: () => import(/* webpackChunkName: "profile" */ './views/profile/index.vue'),
       meta: {

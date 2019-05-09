@@ -77,7 +77,7 @@
       </div>
       <div class="hot-posts block">
         <div class="discuss-header">
-          <h2 class="block-title">热门树洞</h2>
+          <h2 class="block-title">热门帖子</h2>
         </div>
         <div class="hot-posts-main">
           <ul class="hot-posts-list">

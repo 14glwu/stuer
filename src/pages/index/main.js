@@ -76,9 +76,11 @@ router.beforeEach(async (to, from, next) => {
       } else {
         // 登录token已经过期，一般情况下是需要获取新的token
         // 不过我的做法是清除用户的登录状态，回到未登录状态
+        store.commit('setUser', null);
+        store.commit('loginStatus', false);
         localStorage.removeItem('isLogin');
         deleteCookie('auth_token', process.env.VUE_APP_DOMAIN);
-        window.location.href = '/';
+        Message.error('登录失败，请重试');
       }
     }
     next();
