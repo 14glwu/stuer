@@ -10,7 +10,7 @@
         <el-button size="small" type="primary" @click="setPost">确定</el-button>
       </div>
     </div>
-    <div class="post-title">
+    <div class="editor-post-title">
       <input
         type="text"
         class="title-input"
@@ -291,9 +291,8 @@ export default {
     }
   }
 }
-.post-title {
+.editor-post-title {
   width: 100%;
-  height: 5rem;
   padding: 0 2rem;
   .title-input {
     display: inline-block;

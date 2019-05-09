@@ -82,7 +82,7 @@
             </div>
             <div class="nav-menu-item-group">
               <li class="nav-menu-item">
-                <router-link :to="`/profile/${$store.getters.user.id}/setting`">
+                <router-link to="/">
                   <svg class="icon nav-menu-item-logo" aria-hidden="true">
                     <use xlink:href="#icon-about"></use>
                   </svg>
