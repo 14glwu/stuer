@@ -1,11 +1,11 @@
 <template>
-  <div class="discuss_container">
+  <div class="tree_container">
     <div class="content-left block">
-      <div class="discuss-header">
+      <div class="tree-header">
         <h2 class="block-title">树洞</h2>
       </div>
-      <div class="discuss-main">
-        <div class="discuss-main-head">
+      <div class="tree-main">
+        <div class="tree-main-head">
           <div class="editor">
             <div ref="editor_bar" class="editor-bar"></div>
             <div ref="editor_main" class="editor-main">
@@ -16,20 +16,20 @@
             </div>
           </div>
         </div>
-        <div class="discuss-main-content">
-          <ul class="post-list">
-            <li class="post-list-item" v-for="(post, index) in posts" :key="index">
-              <div class="post-content-box">
-                <div v-html="post.content"></div>
+        <div class="tree-main-content">
+          <ul class="treeHole-list">
+            <li class="treeHole-list-item" v-for="(treeHole, index) in treeHoles" :key="index">
+              <div class="treeHole-content-box">
+                <div v-html="treeHole.content"></div>
               </div>
-              <div class="post-detail">
-                <div class="post-detail-tips">
+              <div class="treeHole-detail">
+                <div class="treeHole-detail-tips">
                   <span>匿名用户&nbsp;</span>
                   <span
-                    class="post-time"
-                  >于&nbsp;&nbsp;{{$dayjs(post.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
+                    class="treeHole-time"
+                  >于&nbsp;&nbsp;{{$dayjs(treeHole.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
                 </div>
-                <ul class="post-detail-opts">
+                <ul class="treeHole-detail-opts">
                   <li v-for="(label,index)  in legendOpts " :key="index">
                     <span>{{ label }}</span>
                     <span class="opts-num">{{ parseInt((Math.random()+"").slice(2,4),10) }}</span>
@@ -54,7 +54,7 @@
     </div>
     <div class="content-right">
       <div class="hot-tags block">
-        <div class="discuss-header">
+        <div class="tree-header">
           <h2 class="block-title">热门话题</h2>
         </div>
         <div class="tags-main">
@@ -76,7 +76,7 @@
         </div>
       </div>
       <div class="hot-posts block">
-        <div class="discuss-header">
+        <div class="tree-header">
           <h2 class="block-title">热门帖子</h2>
         </div>
         <div class="hot-posts-main">
@@ -113,7 +113,7 @@ export default {
       total: 0, // 数据总量
       type: 2, // 帖子类型，即发表区域
       order: 1, // 排序方式
-      posts: [],
+      treeHoles: [],
       legendOpts: ['点赞', '评论', '浏览'],
       defaultAvatar
     };
@@ -183,7 +183,7 @@ export default {
       });
       if (result.code === 0) {
         this.total = result.data.count;
-        this.posts = result.data.posts;
+        this.treeHoles = result.data.posts;
       }
     }
   }
@@ -192,7 +192,7 @@ export default {
 
 <style scoped lang="scss">
 @import '~@/style/variables.scss';
-.discuss_container {
+.tree_container {
   display: flex;
   justify-content: space-between;
   padding: 1rem 0;
@@ -205,13 +205,13 @@ export default {
   width: 27%;
   margin-left: 1rem;
 }
-.discuss-header {
+.tree-header {
   display: flex;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid #e2e2e2;
 }
-.discuss-main {
+.tree-main {
   padding: 2rem;
   &-head {
     height: 20rem;
@@ -246,7 +246,7 @@ export default {
   margin: 0 1em;
   color: #eee;
 }
-.post {
+.treeHole {
   &-list {
     margin-bottom: 2rem;
     &-item + &-item {
