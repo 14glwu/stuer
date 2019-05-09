@@ -137,7 +137,7 @@ export default {
         this.$message.success('发表成功');
         await this.getPostsData(); // 更新树洞列表
       } else {
-        this.$message.success('发表失败');
+        this.$message.error('发表失败');
       }
     },
     // 初始化编辑器

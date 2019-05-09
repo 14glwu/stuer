@@ -1,36 +1,38 @@
 <template>
-  <div class="oas_container block">
-    <div class="oas-header">
-      <h2 class="block-title">OA列表</h2>
-    </div>
-    <div class="oas-main">
-      <div class="oas-main-content">
-        <ul class="oa-list">
-          <li class="oa-list-item" v-for="(oa, index) in oas" :key="index">
-            <div class="oa-detail">
-              <div class="oa-detail-head">
-                <router-link :to="`/oas/${oa.id}`" target="_blank">{{oa.title}}</router-link>
-              </div>
-              <div class="oa-detail-foot">
-                <div class="foot-tips">
-                  <span>{{oa.academy || '汕头大学'}}</span>&nbsp;
-                  <span
-                    class="oa-time"
-                  >于&nbsp;&nbsp;{{$dayjs(oa.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
+  <div class="oas_container">
+    <div class="oas_wrap block">
+      <div class="oas-header">
+        <h2 class="block-title">OA列表</h2>
+      </div>
+      <div class="oas-main">
+        <div class="oas-main-content">
+          <ul class="oa-list">
+            <li class="oa-list-item" v-for="(oa, index) in oas" :key="index">
+              <div class="oa-detail">
+                <div class="oa-detail-head">
+                  <router-link :to="`/oas/${oa.id}`" target="_blank">{{oa.title}}</router-link>
+                </div>
+                <div class="oa-detail-foot">
+                  <div class="foot-tips">
+                    <span>{{oa.academy || '汕头大学'}}</span>&nbsp;
+                    <span
+                      class="oa-time"
+                    >于&nbsp;&nbsp;{{$dayjs(oa.createdAt).format('YYYY-MM-DD HH:mm:ss')}}&nbsp;&nbsp;发表</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        </ul>
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-count="11"
-          :total="total"
-          :page-size="pageSize"
-          :current-page="pageIndex"
-          @current-change="handlePageChange"
-        ></el-pagination>
+            </li>
+          </ul>
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :page-count="11"
+            :total="total"
+            :page-size="pageSize"
+            :current-page="pageIndex"
+            @current-change="handlePageChange"
+          ></el-pagination>
+        </div>
       </div>
     </div>
   </div>

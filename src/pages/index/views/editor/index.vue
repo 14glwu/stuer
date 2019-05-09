@@ -55,7 +55,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitPost">确 定</el-button>
       </div>
     </el-dialog>
@@ -127,6 +127,9 @@ export default {
         const result = await createPost(this.form);
         if (result.code === 0) {
           this.$message.success('帖子发表成功');
+          localStorage.removeItem('draft');
+          localStorage.removeItem('draftTitle');
+          this.header_draft = '';
         } else {
           this.$message.error('帖子发表失败');
         }
